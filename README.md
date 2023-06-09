@@ -1,1 +1,1 @@
-# oauth2_server
+# authorizaiton_server
