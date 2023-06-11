@@ -1,12 +1,12 @@
 package com.token.authorization_server.entitiy;
 
 import com.token.authorization_server.enums.RoleName;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import jakarta.persistence.*;
 
 @Entity
 @NoArgsConstructor

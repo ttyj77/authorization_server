@@ -38,6 +38,8 @@ public class Client {
     private boolean requireProofKey;
 
     public static RegisteredClient toRegisteredClient(Client client) {
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("client = " + client);
         RegisteredClient.Builder builder = RegisteredClient.withId(client.getClientId())
                 .clientId(client.getClientId())
                 .clientSecret(client.getClientSecret())

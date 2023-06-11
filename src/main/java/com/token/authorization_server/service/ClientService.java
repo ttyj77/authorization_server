@@ -23,8 +23,11 @@ public class ClientService implements RegisteredClientRepository {
 
     }
 
+
     @Override
     public RegisteredClient findById(String id) {
+        System.out.println("============================id");
+        System.out.println("id = " + id);
         Client client = clientRepository.findByClientId(id)
                 .orElseThrow(() -> new RuntimeException("client not found"));
         return Client.toRegisteredClient(client);
@@ -32,6 +35,8 @@ public class ClientService implements RegisteredClientRepository {
 
     @Override
     public RegisteredClient findByClientId(String clientId) {
+        System.out.println("========================client id");
+        System.out.println("clientId = " + clientId);
         Client client = clientRepository.findByClientId(clientId)
                 .orElseThrow(() -> new RuntimeException("clientId not found"));
         return Client.toRegisteredClient(client);
@@ -44,6 +49,9 @@ public class ClientService implements RegisteredClientRepository {
     }
 
     private Client clientFromDto(CreateClientDto dto) {
+        System.out.println("ClientService.clientFromDto");
+        System.out.println("dto = " + dto);
+        System.out.println("8888888888888888888888888888888888888888888888877897987");
         Client client = Client.builder()
                 .clientId(dto.getClientId())
                 .clientSecret(passwordEncoder.encode(dto.getClientSecret()))

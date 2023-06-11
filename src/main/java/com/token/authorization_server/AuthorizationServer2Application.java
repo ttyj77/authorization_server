@@ -1,10 +1,5 @@
 package com.token.authorization_server;
 
-import com.token.authorization_server.entitiy.Role;
-import com.token.authorization_server.enums.RoleName;
-import com.token.authorization_server.repository.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

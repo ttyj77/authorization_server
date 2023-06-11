@@ -17,7 +17,10 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
@@ -40,7 +43,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AuthorizationSecurityConfig {
 
-//    @Value("{spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    //    @Value("{spring.security.oauth2.resourceserver.jwt.issuer-uri}")
 //    private String issuerUrl;
     private final PasswordEncoder passwordEncoder;
     private final ClientService clientService;
@@ -65,10 +68,11 @@ public class AuthorizationSecurityConfig {
                                 new LoginUrlAuthenticationEntryPoint("/login"),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                         )
-                )
-                // Accept access tokens for User Info and/or Client Registration
-                .oauth2ResourceServer((resourceServer) -> resourceServer
-                        .jwt(Customizer.withDefaults()));
+                );
+
+        // Accept access tokens for User Info and/or Client Registration
+//                .oauth2ResourceServer((resourceServer) -> resourceServer
+//                        .jwt(Customizer.withDefaults()));
 
         return http.build();
     }
@@ -78,27 +82,33 @@ public class AuthorizationSecurityConfig {
     @Order(2)
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
 //        http.cors(Customizer.withDefaults());
-        http.csrf(Customizer.withDefaults());
-
+//        http.authorizeRequests().requestMatchers("/auth/**", "/client/**").permitAll().requestMatchers("/user/getEmployeesList")
+//                .hasAnyRole("ADMIN").anyRequest().authenticated().and().formLogin()
+//                .permitAll().and().logout().permitAll();
+//
+//        http.csrf().disable();
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/auth/**", "/client/**").permitAll()
+                        .requestMatchers("/logout", "/auth/**", "/client/**", "/login", "/logout-proc").permitAll()
+                        .requestMatchers("/admin").authenticated()
+                        .requestMatchers("/user").hasRole("MYDATA")
                         .anyRequest().authenticated()
-                )
+                );
 
 
-                // Form login handles the redirect to the login page from the
-                // authorization server filter chain
-                .formLogin(Customizer.withDefaults());
-//                .formLogin().loginPage("/user/login");
-//        http.csrf().ignoringRequestMatchers("/auth/**");
+        // Form login handles the redirect to the login page from the
+        // authorization server filter chain
+//                .formLogin(Customizer.withDefaults());
+        http
+                .formLogin().loginPage("/login");
         return http.build();
 
     }
 
 //    @Bean
-//    public UserDetailsService userDetailsService() {
+//    public UserDetailsService us erDetailsService() {
 //        UserDetails userDetails = User.withUsername("user")
 ////                .username("user")
 //                .password("{noop}user")
@@ -138,7 +148,7 @@ public class AuthorizationSecurityConfig {
 //                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
 //                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
 ////                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
-//                .redirectUri("https://oauthdebugger.com/debug")
+//                .redirectUri("http://127.0.0.1:8000/authorized")
 ////                .postLogoutRedirectUri("http://127.0.0.1:8080/")
 //                .scope(OidcScopes.OPENID)
 //                .clientSettings(clientSettings())
@@ -211,4 +221,8 @@ public class AuthorizationSecurityConfig {
 //        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 //        return jwtAuthenticationConverter;
 //    }
+
+    // client 설정 DB 저장
+
+
 }
